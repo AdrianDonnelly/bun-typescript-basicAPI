@@ -11,5 +11,9 @@ To run:
 ```bash
 bun run start
 ```
+To create a post:
+```bash
+{"title": "Post title", "content": "Post content"}
+```
 
 
