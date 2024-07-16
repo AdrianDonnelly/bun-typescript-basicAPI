@@ -1,18 +1,18 @@
 import { serve } from 'bun';
 import 'reflect-metadata';
 import { DataSource } from 'typeorm';
-//import { Posts } from './entities/Posts.ts';
+import { Posts } from './entities/Posts.ts';
 
 export const AppDataSource = new DataSource({
-    type: 'mysql',
+    type: 'postgres',
     host: 'localhost',
-    port: 3306,
+    port: 5432,
     username: 'root',
     password: 'Adrian15',
     database: 'simple_api',
     synchronize: true,
     logging: false,
-    //entities: [Posts],
+    entities: [Posts],
   });
 
 AppDataSource.initialize()
