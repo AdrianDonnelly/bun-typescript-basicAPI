@@ -1,4 +1,27 @@
 import { serve } from 'bun';
+import 'reflect-metadata';
+import { DataSource } from 'typeorm';
+//import { Posts } from './entities/Posts.ts';
+
+export const AppDataSource = new DataSource({
+    type: 'mysql',
+    host: 'localhost',
+    port: 3306,
+    username: 'root',
+    password: 'Adrian15',
+    database: 'simple_api',
+    synchronize: true,
+    logging: false,
+    //entities: [Posts],
+  });
+
+AppDataSource.initialize()
+  .then(() => {
+    console.log('Data Source has been initialized!');
+  })
+  .catch((err) => {
+    console.error('Error during Data Source initialization:', err);
+  });
 
 const PORT = 3000;
 
@@ -10,6 +33,8 @@ interface Post {
 
 let blogPosts: Post[] = [];
 
+// Function to handle getting all posts \\
+
 function handleGetAllPosts() {
     console.log('Handling GET all posts');
     return new Response(JSON.stringify(blogPosts), {
@@ -17,19 +42,27 @@ function handleGetAllPosts() {
     });
 }
 
+// Function to handle getting specific posts by their IDs\\
+
 function handleGetPostByID(id: string) {
     console.log(`Handling GET post by ID: ${id}`);
     const post = blogPosts.find((post) => post.id === id);
+
+    // If no post if found return 404 \\
     if (!post) {
         return new Response("Post not found", { status: 404 });
     }
+    // If a post is found return the post data \\
     return new Response(JSON.stringify(post), {
         headers: { 'Content-Type': 'application/json' },
     });
 }
 
-async function createPost(req: Request) {
+// Function to handle creating a post \\
+async function handleCreatePost(req: Request) {
     console.log('Handling POST create new post');
+
+    // Parse json post data into postData \\
     let postData;
     try {
         postData = await req.json();
@@ -37,17 +70,18 @@ async function createPost(req: Request) {
         return new Response("Invalid JSON input", { status: 400 });
     }
 
+    // Check if post data has title and content in the correct format \\
     const { title, content } = postData;
     if (!title || !content) {
         return new Response("Title and content are required", { status: 400 });
     }
 
+    // If everything is correct create a new post with the id as a sequential number \\
     const newPost: Post = {
         id: `${blogPosts.length}`,
         title,
         content
     };
-
     blogPosts.push(newPost);
     return new Response(JSON.stringify(newPost), {
         headers: { 'Content-Type': 'application/json' },
@@ -55,6 +89,7 @@ async function createPost(req: Request) {
     });
 }
 
+// Function to update 
 async function handleUpdatePost(req: Request, id: string) {
     console.log(`Handling PATCH update post ID: ${id}`);
     const postIndex = blogPosts.findIndex((post) => post.id === id);
@@ -108,7 +143,7 @@ serve({
         }
 
         if (method === 'POST' && pathname === '/api/posts') {
-            return await createPost(req);
+            return await handleCreatePost(req);
         }
 
         if (method === 'PATCH') {
