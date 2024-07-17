@@ -11,7 +11,7 @@ export const AppDataSource = new DataSource({
     password: 'Adrian15',
     database: 'simple_api',
     synchronize: true,
-    logging: false,
+    logging: true,
     entities: [Posts],
   });
 
@@ -26,27 +26,37 @@ AppDataSource.initialize()
 const PORT = 3000;
 
 interface Post {
-    id: string;
+    id: number;
     title: string;
     content: string;
 }
 
-let blogPosts: Post[] = [];
+//let blogPosts: Post[] = [];
 
 // Function to handle getting all posts \\
 
-function handleGetAllPosts() {
+async function handleGetAllPosts() {
     console.log('Handling GET all posts');
+        
+    const blogPosts = await Posts.find();
+
     return new Response(JSON.stringify(blogPosts), {
-        headers: { 'Content-Type': 'application/json' },
-    });
+
+       headers: { 'Content-Type': 'application/json' },
+
+   });
 }
 
 // Function to handle getting specific posts by their IDs\\
 
-function handleGetPostByID(id: string) {
+async function handleGetPostByID(id: string) {
+
     console.log(`Handling GET post by ID: ${id}`);
-    const post = blogPosts.find((post) => post.id === id);
+
+    const post = await Posts.findOneBy({ id: parseInt(id, 10) });
+    if (!post) {
+        return new Response("Post not found", { status: 404 });
+    }
 
     // If no post if found return 404 \\
     if (!post) {
@@ -77,13 +87,13 @@ async function handleCreatePost(req: Request) {
     }
 
     // If everything is correct create a new post with the id as a sequential number \\
-    const newPost: Post = {
-        id: `${blogPosts.length}`,
-        title,
-        content
-    };
-    blogPosts.push(newPost);
-    return new Response(JSON.stringify(newPost), {
+    const newPost = new Posts();
+    newPost.title = title;
+    newPost.content = content;
+
+
+    const savedPost = await Posts.save(newPost);
+    return new Response(JSON.stringify(savedPost), {
         headers: { 'Content-Type': 'application/json' },
         status: 201,
     });
@@ -92,31 +102,30 @@ async function handleCreatePost(req: Request) {
 // Function to update 
 async function handleUpdatePost(req: Request, id: string) {
     console.log(`Handling PATCH update post ID: ${id}`);
-    const postIndex = blogPosts.findIndex((post) => post.id === id);
 
-    if (postIndex === -1) {
+    const post = await Posts.findOneBy({ id: parseInt(id, 10) });
+    if (!post) {
         return new Response("Post not found", { status: 404 });
     }
 
-    const { title, content } = await req.json();
-    blogPosts[postIndex] = {
-        ...blogPosts[postIndex],
-        title,
-        content,
-    };
+const { title, content } = await req.json();
+    post.title = title;
+    post.content = content;
+
+    await Posts.save(post);
 
     return new Response("Post has been updated", { status: 200 });
 }
 
-function handleDeletePost(id: string) {
+async function handleDeletePost(id: string) {
     console.log(`Handling DELETE post ID: ${id}`);
-    const postIndex = blogPosts.findIndex((post) => post.id === id);
 
-    if (postIndex === -1) {
+    const post = await Posts.findOneBy({ id: parseInt(id, 10) });
+    if (!post) {
         return new Response("Post not found", { status: 404 });
     }
-
-    blogPosts.splice(postIndex, 1);
+ 
+    await Posts.remove(post);
 
     return new Response("Post has been deleted", { status: 200 });
 }
