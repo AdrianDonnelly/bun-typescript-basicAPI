@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple API</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div>
+        <button onclick ="displayPosts()">GET Posts</button>
+        <div id ="Post">
+        </div>
+    </div>
+    <div>
+        <form onsubmit = submitForm(event)>
+            <input type="text" id="title" name="title"><br><br>
+            <input type="text" id="content" name="content"><br><br>
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+
+
+  <script src="src/main.js"></script>
+</body>
+</html>

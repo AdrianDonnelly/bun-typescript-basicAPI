@@ -1,12 +1,21 @@
 import { serve } from 'bun';
+import cors from 'cors';
 import 'reflect-metadata';
 import { DataSource } from 'typeorm';
 import { Posts } from './entities/Posts.ts';
 
+const corsOptions = {
+    origin: 'http://127.0.0.1:5500', // Replace with your frontend URL
+    methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+};
+
+const corsMiddleware = cors(corsOptions);
+
 export const AppDataSource = new DataSource({
     type: 'postgres',
     host: 'localhost',
-    port: 5432,
+    port:   5432,
     username: 'root',
     password: 'Adrian15',
     database: 'simple_api',
@@ -24,6 +33,7 @@ AppDataSource.initialize()
   });
 
 const PORT = 3000;
+
 
 interface Post {
     id: number;
@@ -130,13 +140,25 @@ async function handleDeletePost(id: string) {
     return new Response("Post has been deleted", { status: 200 });
 }
 
-serve({
+const server = serve({
     port: PORT,
     fetch: async (req: Request) => {
         const { method } = req;
         const { pathname } = new URL(req.url);
         console.log(`Received request: ${method} ${pathname}`);
         const pathRegexForID = /^\/api\/posts\/(\d+)$/;
+
+        if (method === 'OPTIONS') {
+            // Respond with CORS headers
+            return new Response(null, {
+                headers: {
+                    'Access-Control-Allow-Methods': corsOptions.methods.join(','),
+                    'Access-Control-Allow-Headers': corsOptions.allowedHeaders.join(','),
+                    'Access-Control-Allow-Origin': corsOptions.origin,
+                    'Access-Control-Max-Age': '86400', // 24 hours
+                },
+            });
+        }
 
         if (method === 'GET') {
             const match = pathname.match(pathRegexForID);
@@ -187,5 +209,4 @@ serve({
         },
     },
 });
-
 console.log(`Listening on port http://localhost:${PORT}`);

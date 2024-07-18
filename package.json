@@ -1,18 +1,20 @@
 {
   "name": "bun-ts-api",
-  "module": "src/index.ts",
+  "module": "src/main.ts",
   "type": "module",
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "@types/cors": "^2.8.17"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
   },
   "scripts": {
-    "start": "bun --hot run src/index.ts"
+    "start": "bun --hot run src/main.ts"
   },
   "dependencies": {
     "bun": "^1.1.18",
+    "cors": "^2.8.5",
     "mysql": "^2.18.1",
     "pg": "^8.12.0",
     "postgres": "^3.4.4",
