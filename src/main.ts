@@ -4,6 +4,8 @@ import 'reflect-metadata';
 import { DataSource } from 'typeorm';
 import { Posts } from './entities/Posts.ts';
 
+
+
 const corsOptions = {
     origin: 'http://127.0.0.1:5500', // Replace with your frontend URL
     methods: ['GET', 'POST', 'PATCH', 'DELETE'],
@@ -52,7 +54,12 @@ async function handleGetAllPosts() {
 
     return new Response(JSON.stringify(blogPosts), {
 
-       headers: { 'Content-Type': 'application/json' },
+       headers: { 'Content-Type': 'application/json' ,
+                    'Access-Control-Allow-Methods': corsOptions.methods.join(','),
+                    'Access-Control-Allow-Headers': corsOptions.allowedHeaders.join(','),
+                    'Access-Control-Allow-Origin': corsOptions.origin,
+                    'Access-Control-Max-Age': '86400', // 24 hours
+       },
 
    });
 }
@@ -74,7 +81,12 @@ async function handleGetPostByID(id: string) {
     }
     // If a post is found return the post data \\
     return new Response(JSON.stringify(post), {
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json',
+                    'Access-Control-Allow-Methods': corsOptions.methods.join(','),
+                    'Access-Control-Allow-Headers': corsOptions.allowedHeaders.join(','),
+                    'Access-Control-Allow-Origin': corsOptions.origin,
+                    'Access-Control-Max-Age': '86400', // 24 hours
+         },
     });
 }
 
@@ -104,7 +116,12 @@ async function handleCreatePost(req: Request) {
 
     const savedPost = await Posts.save(newPost);
     return new Response(JSON.stringify(savedPost), {
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json' ,
+                    'Access-Control-Allow-Methods': corsOptions.methods.join(','),
+                    'Access-Control-Allow-Headers': corsOptions.allowedHeaders.join(','),
+                    'Access-Control-Allow-Origin': corsOptions.origin,
+                    'Access-Control-Max-Age': '86400', // 24 hours
+        },
         status: 201,
     });
 }
@@ -139,7 +156,6 @@ async function handleDeletePost(id: string) {
 
     return new Response("Post has been deleted", { status: 200 });
 }
-
 const server = serve({
     port: PORT,
     fetch: async (req: Request) => {
@@ -195,7 +211,7 @@ const server = serve({
             }
         }
         console.log('No matching route found');
-        return new Response(`Not Found`, { status: 404 });
+        return new Response(`Not Found`, { status: 404 }, );
     },
     websocket: {
         message: (ws, message) => {
