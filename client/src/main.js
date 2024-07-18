@@ -8,15 +8,23 @@ async function displayPosts(){
         const postDiv = document.createElement('div');
         postDiv.classList.add('post');
 
+        const IDElement = document.createElement('h2');
+        IDElement.textContent = post.id;
+
         const titleElement = document.createElement('h2');
         titleElement.textContent = post.title;
 
         const contentElement = document.createElement('p');
         contentElement.textContent = post.content;
 
+        const DeleteButton = document.createElement('button');
+        DeleteButton.textContent = ('delete')
+        DeleteButton.onclick = () => (DELETE(post.id))
+        
+        postDiv.appendChild(IDElement);
         postDiv.appendChild(titleElement);
         postDiv.appendChild(contentElement);
-
+        postDiv.appendChild(DeleteButton)
         postElement.appendChild(postDiv);
     });
 
@@ -48,6 +56,16 @@ async function POST(title,content){
             content: content,
             completed: false
         }),
+        headers: {
+            "Content-type": "application/json; charset=UTF-8"
+          }
+    });
+
+
+}
+async function DELETE(id){
+    const response = await fetch(`http://localhost:3000/api/posts/${id}`,{
+        method: "DELETE",
         headers: {
             "Content-type": "application/json; charset=UTF-8"
           }
