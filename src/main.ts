@@ -154,7 +154,12 @@ async function handleDeletePost(id: string) {
  
     await Posts.remove(post);
 
-    return new Response("Post has been deleted", { status: 200 });
+    return new Response("Post has been deleted", { status: 200 ,headers: {
+        'Access-Control-Allow-Methods': corsOptions.methods.join(','),
+        'Access-Control-Allow-Headers': corsOptions.allowedHeaders.join(','),
+        'Access-Control-Allow-Origin': corsOptions.origin,
+        'Access-Control-Max-Age': '86400', // 24 hours
+    },});
 }
 const server = serve({
     port: PORT,
