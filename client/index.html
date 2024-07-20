@@ -5,20 +5,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Simple API</title>
   <link rel="stylesheet" href="styles.css">
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body, h1, h2, h3, h4, h5, h6, p, input[type="text"], form {
+      color: #f8f9fa;
+    }
+  </style>
 </head>
-<body>
-    <div>
-        <button onclick ="displayPosts()">GET Posts</button>
-        <div id ="Post">
-        </div>
+<body class="bg-dark">
+  <header class="d-flex justify-content-center">
+    <div class="d-flex justify-content-center flex-column ">
+    <form class="d-flex justify-content-center flex-column" onsubmit = submitForm(event)>
+        <h2 class="d-flex justify-content-center"> Create new Post</h2>
+        <input type="text" id="title" name="title" placeholder="title" class="m-1 text-dark"><br><br>
+        <input type="text" id="content" name="content" placeholder="content" class="m-1 text-dark"><br><br>
+        <input type="submit" class="btn btn-primary m-1"value="Submit">
+    </form>
+    <button type="button"class="d-flex h-25 m-1 justify-content-center btn btn-primary"onclick ="displayPosts()">GET Posts</button>
     </div>
-    <div>
-        <form onsubmit = submitForm(event)>
-            <input type="text" id="title" name="title"><br><br>
-            <input type="text" id="content" name="content"><br><br>
-            <input type="submit" value="Submit">
-        </form>
+  </header>
+  <div class="d-flex flex-row justify-content-center">
+    <div class="d-flex column  justify-content-center">
+        <div id ="Post"class="d-flex flex-wrap w-50 justify-content-center">
     </div>
+  </div>
+  </div>
 
 
   <script src="src/main.js"></script>
