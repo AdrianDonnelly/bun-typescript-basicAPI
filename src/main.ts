@@ -74,13 +74,9 @@ async function handleGetPostByID(id: string) {
     if (!post) {
         return new Response("Post not found", { status: 404 });
     }
-
-    // If no post if found return 404 \\
-    if (!post) {
-        return new Response("Post not found", { status: 404 });
-    }
     // If a post is found return the post data \\
     return new Response(JSON.stringify(post), {
+        
         headers: { 'Content-Type': 'application/json',
                     'Access-Control-Allow-Methods': corsOptions.methods.join(','),
                     'Access-Control-Allow-Headers': corsOptions.allowedHeaders.join(','),

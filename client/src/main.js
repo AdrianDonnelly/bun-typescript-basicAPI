@@ -1,8 +1,8 @@
 
 const component = ['d-flex','justify-content-center'];
 
-async function displayPosts(){
-    const data = await GET()
+async function displayPosts(posts = null){
+    const data = posts || await GET();
     let postElement = document.getElementById("Post");
     postElement.innerHTML = '';
 
@@ -85,13 +85,24 @@ async function submitForm(event) {
     if(await POST(title, content)) location.reload();
 }
 
+async function searchPosts(event){
+    event.preventDefault();
+    const id =document.getElementById('search').value;
+    const data = await GET(id)
+    displayPosts(data);
+}
 
-async function GET() {
+async function GET(id) {
+    const baseUrl = 'http://localhost:3000/api/posts';
+    let url = baseUrl;
+    if (id !== undefined && id !== null) {
+        url += `/${id}`;
+    }     
     try {
-        const response = await fetch('http://localhost:3000/api/posts');
+        const response = await fetch(url);
         const data = await response.json();
         console.log(data);
-        return data;
+        return Array.isArray(data) ? data : [data];
     } catch (error) {
         console.error('Error fetching data:', error);
         return [];

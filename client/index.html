@@ -4,11 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Simple API</title>
-  <link rel="stylesheet" href="styles.css">
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
   <style>
     body, h1, h2, h3, h4, h5, h6, p, input[type="text"], form {
       color: #f8f9fa;
+    .min-width-10{
+        min-width: 70rem;
+    }
     }
   </style>
 </head>
@@ -23,13 +25,20 @@
     </form>
     <button type="button"class="d-flex h-25 m-1 justify-content-center btn btn-primary"onclick ="displayPosts()">GET Posts</button>
     </div>
+    <div class="ml-5" >
+      <form class="d-flex justify-content-center flex-column" onsubmit = searchPosts(event)>
+        <h2>Search Posts by ID</h2>
+        <input type="text" id="search" name="search" placeholder="ID" class="m-1 text-dark"><br><br>
+        <input type="submit" class="btn btn-primary m-1"value="Submit">
+      </form>
+    </div>
   </header>
-  <div class="d-flex flex-row justify-content-center">
-    <div class="d-flex column  justify-content-center">
+  <div class="d-flex flex-row justify-content-center ">
+    <div class="d-flex column  justify-content-center min-width-10">
         <div id ="Post"class="d-flex flex-wrap w-50 justify-content-center">
     </div>
   </div>
-  </div>
+  
 
 
   <script src="src/main.js"></script>
