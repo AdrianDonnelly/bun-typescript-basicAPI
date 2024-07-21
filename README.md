@@ -26,7 +26,7 @@ Client:
 Open index.html
 ```
 
-Database:
+Database: Postgres
 ```bash
-Can use any relational database. Currently Postgres is being used.
+sudo service postgresql start
 ```
